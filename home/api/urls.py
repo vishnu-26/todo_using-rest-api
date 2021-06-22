@@ -6,6 +6,8 @@ app_name='api'
 urlpatterns = [
 
 #    path('',views.frontend,name="frontend"),
+    path('todo-login/',views.todoLogin,name="todologin"),
+    path('todo-logout/',views.todoLogout,name="todologout"),
     path('todo-list/', views.todoList, name="todo-list"),
 	path('todo-detail/<str:pk>/', views.todoDetail, name="todo-detail"),
 	path('todo-create/', views.todoCreate, name="todo-create"),

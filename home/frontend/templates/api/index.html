@@ -90,6 +90,8 @@
 			</div>	
 		</div>
 
+        <button id = "logout" type="button">Logout</button>
+
 	</div>
 
 
@@ -209,6 +211,7 @@
             }            
 
             var title = document.getElementById('title').value
+            
 
             fetch(url,{
                 method: 'POST',
@@ -283,6 +286,32 @@
             
 
         }
+
+        
+        var logout = document.getElementById("logout")
+        logout.addEventListener("click",function(){
+            url = 'http://localhost:8000/api/todo-logout/';
+
+            fetch(url,{
+                method: 'POST',
+                
+                headers:{
+                     'Content-type':'application/json',
+                     'X-CSRFToken':csrftoken,
+                      'credentials':true,
+                },
+               
+
+
+            }).then(response => response.json())
+               .then(function(data){
+                    console.log(data['message'])
+                    window.location.replace('http://localhost:8000/')
+                    
+                })
+
+
+        })
         
         
 	
