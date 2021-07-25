@@ -13,23 +13,6 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 from django.contrib.auth import logout
-
-# Create your views here.
-
-#@api_view(['GET'])
-#def apiOverview(request):
-#	api_urls = {
-#		'List':'/task-list/',
-#		'Detail View':'/task-detail/<str:pk>/',
-#		'Create':'/task-create/',
-#		'Update':'/task-update/<str:pk>/',
-#		'Delete':'/task-delete/<str:pk>/',
-#		}
-#
-#	return Response(api_urls)
-#
-
-#def frontend(request):
     
 @api_view(['POST'])
 def todoLogin(request):
