@@ -56,7 +56,8 @@ def todoLogin(request):
 
         response.set_cookie(key='jwt', value=token, httponly=True)
         response.data = {
-            'jwt': token
+            'jwt': token,
+            'user':user.id
         }
 #        print(token)
         
@@ -106,22 +107,52 @@ def todoDetail(request, pk):
 
 @api_view(['POST'])
 def todoCreate(request):
-	serializer = TodoSerializer(data=request.data)
+    token = request.COOKIES.get('jwt')
 
-	if serializer.is_valid():
-		serializer.save()
+    if not token:
+       raise AuthenticationFailed('Unauthenticated!')
 
-	return Response(serializer.data)
+
+    try:
+       decoded = jwt.decode(token, 'secret', algorithms=['HS256'])
+    except jwt.ExpiredSignatureError:
+       raise AuthenticationFailed('Unauthenticated!')
+
+    todo={'user':decoded['id'],'title':request.data['title']}
+    print(todo)
+    serializer = TodoSerializer(data=todo)
+    
+    if serializer.is_valid():
+	    serializer.save()
+    else:
+        print("Error")
+    
+    return Response(serializer.data)
+
+
 
 @api_view(['POST'])
 def todoUpdate(request, pk):
-	todo = Todo.objects.get(id=pk)
-	serializer = TodoSerializer(instance=todo, data=request.data)
+    token = request.COOKIES.get('jwt')
 
-	if serializer.is_valid():
-		serializer.save()
+    if not token:
+        raise AuthenticationFailed('Unauthenticated!')
 
-	return Response(serializer.data)
+
+    try:
+       decoded = jwt.decode(token, 'secret', algorithms=['HS256'])
+    except jwt.ExpiredSignatureError:
+       raise AuthenticationFailed('Unauthenticated!')
+
+
+    old_todo = Todo.objects.get(id=pk)
+    new_todo = {'user':decoded['id'],'title':request.data['title'],'completed':request.data['completed']}
+    serializer = TodoSerializer(instance=old_todo,data=new_todo)
+
+    if serializer.is_valid():
+	    serializer.save()
+
+    return Response(serializer.data)
 
 
 @api_view(['DELETE'])

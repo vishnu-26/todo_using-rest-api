@@ -202,12 +202,13 @@
         var form = document.getElementById('form')
         form.addEventListener('submit',function(e){
             e.preventDefault()
-            console.log('form submitted')
+            // console.log('form submitted')
             
             var url = 'http://localhost:8000/api/todo-create/'
 
             if(activeitem != null){
                 url = `http://localhost:8000/api/todo-update/${activeitem.id}/`
+				activeitem=null
             }            
 
             var title = document.getElementById('title').value
@@ -219,14 +220,15 @@
                     'Content-type':'application/json',
                      'X-CSRFToken':csrftoken,
                 },
-                body:JSON.stringify({'title':title})
+                body:JSON.stringify({'title':title,'completed':item.completed})
 
 
             }
             ).then(function(response){
+					console.log(response)
                     buildList()
                     document.getElementById('form').reset()
-            
+					
             })
         
         })
